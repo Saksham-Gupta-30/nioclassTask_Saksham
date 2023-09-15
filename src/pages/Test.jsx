@@ -8,7 +8,7 @@ import Timer from "./component/Timer.jsx";
 
 const Test = () => {
     const navigate = useNavigate()
-    const totalTime = (window.localStorage.getItem('time'))
+    const totalTime = parseInt(window.localStorage.getItem('time')) || 0
     // console.log(totalTime)
     const questionIDs = (window.localStorage.getItem('questions')?.split(',')) || []
     const [questions, setQuestions] = useState([])
@@ -45,9 +45,9 @@ const Test = () => {
         const interval = setInterval(() => {
             const questionTimes = JSON.parse(window.localStorage.getItem('question-time')) || [];
 
-            // if (!questionTimes[activeQuestion]) {
-            //     questionTimes[activeQuestion] = { time: 0 };
-            // }
+            if (!questionTimes[activeQuestion]) {
+                questionTimes[activeQuestion] = { time: 0 };
+            }
             questionTimes[activeQuestion].time++;
             window.localStorage.setItem('question-time', JSON.stringify(questionTimes));
         }, 1000);
