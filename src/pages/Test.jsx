@@ -8,12 +8,10 @@ import Timer from "./component/Timer.jsx";
 
 const Test = () => {
     const navigate = useNavigate()
-    const totalTime = parseInt(window.localStorage.getItem('time')) || 0
     // console.log(totalTime)
-    const questionIDs = (window.localStorage.getItem('questions')?.split(',')) || []
     const [questions, setQuestions] = useState([])
     const [activeQuestion, setActiveQuestion] = useState(0)
-    const [time, setTime] = useState(totalTime);
+    const [time, setTime] = useState(0);
     const submitted = window.localStorage.getItem('submitted')
 
     useEffect(() => {
@@ -21,23 +19,32 @@ const Test = () => {
         if (user == null) {
             navigate('/')
         }
+        const questionIDs = (window.localStorage.getItem('questions')?.split(',')) || []
+
         const fetchQuestions = async () => {
             const questions = [];
             for (let i = 0; i < questionIDs.length; i++) {
-                const response = await axios.get(`https://0h8nti4f08.execute-api.ap-northeast-1.amazonaws.com/getQuestionDetails/getquestiondetails?QuestionID=${questionIDs[i]}`);
+                const response = await axios.get(`https://0h8nti4f08.execute-api.ap-northeast-1.amazonaws.com/getQuestionDetails/getquestiondetails?QuestionID=${questionIDs[i]}`)
                 const question = {
                     question: response.data[0].Question,
                     id: response.data[0].ChapterID,
                     time: 0,
                     questionId: response.data[0].QuestionID,
                 };
+                console.log(question)
                 questions.push(question);
             }
             setQuestions(questions);
+            // console.log(questions)
             window.localStorage.setItem('question-time', JSON.stringify(questions));
         };
 
         fetchQuestions();
+        // window.localStorage.setItem('question-time', questions);
+        const totalTime = parseInt(window.localStorage.getItem('time'))
+        setTime(totalTime)
+        
+        // setTotalTime(parseInt(window.localStorage.getItem('time')))
         // console.log(questions)
     }, [])
 
